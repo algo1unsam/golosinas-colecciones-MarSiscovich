@@ -1,1 +1,132 @@
+import golosinas.*
+
+describe "parte 1 golosinas" {
+  test "bombon" {
+    assert.equals(15, bombon._peso())
+    assert.equals(5, bombon._precio())
+    assert.equals("frutilla", bombon._sabor())
+    assert.notThat(bombon._gluten())
+  }
+  test "alfajor" {
+    assert.equals(300, alfajor._peso())
+    assert.equals(12, alfajor._precio())
+    assert.equals("chocolate", alfajor._sabor())
+    assert.notThat(alfajor._gluten())
+  }
+  test "caramelo" {
+    assert.equals(5, caramelo._peso())
+    assert.equals(1, caramelo._precio())
+    assert.equals("frutilla", caramelo._sabor())
+    assert.that(caramelo._gluten())
+  }
+  test "chupetin" {
+    assert.equals(7, chupetin._peso())
+    assert.equals(2, chupetin._precio())
+    assert.equals("naranja", chupetin._sabor())
+    assert.that(chupetin._gluten())
+  }
+  test "oblea" {
+    assert.equals(250, oblea._peso())
+    assert.equals(5, oblea._precio())
+    assert.equals("vainilla", oblea._sabor())
+    assert.notThat(oblea._gluten())
+  }
+  test "chocolatin 40" {
+    chocolatin.peso(40)
+    assert.equals(40, chocolatin._peso())
+    assert.equals(20, chocolatin._precio())
+    assert.equals("chocolate", chocolatin._sabor())
+    assert.notThat(chocolatin._gluten())
+  }
+  test "chocolatin 100" {
+    chocolatin.peso(100)
+    assert.equals(100, chocolatin._peso())
+    assert.equals(50, chocolatin._precio())
+    assert.equals("chocolate", chocolatin._sabor())
+    assert.notThat(chocolatin._gluten())
+  }
+  test "tutti gluten si"{
+    tuti._gluten(true) 
+    assert.equals(7, tuti._precio())
+  }
+  test "tutti gluten no"{
+    tuti._gluten(false)  
+    assert.equals(10, tuti._precio())
+  }
+
+  test "chocolatin 2 mordiscos" {
+    chocolatin.peso(100)
+    chocolatin.recibeMordisco()
+    chocolatin.recibeMordisco()
+    assert.equals(96, chocolatin._peso())
+    assert.equals(50, chocolatin._precio())
+  }
+   test "tutti-frutti 2 mordiscos" {
+    tuti.recibeMordisco()
+    tuti.recibeMordisco()
+    assert.equals(chocolate, tuti._sabor())
+  }
+  test "oblea 3 mordiscos" {
+    oblea.recibeMordisco()
+    oblea.recibeMordisco()
+    oblea.recibeMordisco()
+    assert.equals(46.875, oblea._peso())
+  }
+
+  test "tuti bañada"{
+    golBaniada.golosinaBase(tuti,null)
+    tuti._gluten(true)
+    assert.equals(9, golBaniada.peso())
+    assert.equals(9, golBaniada._precio())
+    assert.equals(naranja, golBaniada._sabor())
+    assert.that(golBaniada._gluten()) 
+  }
+  test "chocolatin bañado"{
+    golBaniada.golosinaBase(chocolatin,100)
+    assert.equals(104, golBaniada.peso())
+    assert.equals(52, golBaniada._precio())
+    assert.equals("chocolate", golBaniada._sabor())
+    assert.notThat(golBaniada._gluten()) 
+  }
+}
+  test "chupetin bañado"{
+    golBaniada.golosinaBase(chupetin,null)
+    assert.equals(11, golBaniada.peso())
+    assert.equals(4, golBaniada._precio())
+    assert.equals("naranja", golBaniada._sabor())
+    assert.that(golBaniada._gluten()) 
+  }
+
+
+describe "parte 2 mariano" {
+  test "comprar" {
+    mariano.comprar(chupetin)
+    assert.equals([chupetin],mariano.golosina())
+  }
+  test "desechar" {
+    mariano.comprar(chupetin)
+    mariano.comprar(alfajor)
+    mariano.desechar(chupetin)
+    assert.equals([alfajor],mariano.golosina())
+  }
+  test "sin TACC" {
+    mariano.comprar(chupetin)
+    mariano.comprar(alfajor)
+    mariano.comprar(chocolatin)
+    assert.that(mariano.sinTACC())
+  }
+  test "precios cuidados" {
+    mariano.comprar(chupetin)
+    mariano.comprar(alfajor)
+    mariano.comprar(caramelo)
+    mariano.preciosCuidados()
+    assert.equals([chupetin, caramelo], mariano.precioCuidado())
+  }
+  test "comprar" {
+    mariano.comprar(chupetin)
+    assert.equals([chupetin],mariano.golosina())
+  }
+
+
+}
 

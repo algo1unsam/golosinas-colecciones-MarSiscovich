@@ -52,14 +52,14 @@ object oblea {
 
   method recibeMordisco() {
     if (_peso > 70){
-        _peso = _peso / 2
+        _peso /= 2
     } else {
-        _peso = _peso * 0.75
+        _peso *= 0.75
     }
   }  
 }
 object chocolatin {
-  var property _precio = _pesoI / 2
+  method _precio() = _pesoI / 2
   var property _sabor = "chocolate"
   var property _peso = 0
   var property _pesoI = 0
@@ -71,50 +71,47 @@ object chocolatin {
   }
 
   method recibeMordisco() {
-    _peso -= - 2
+    _peso -= 2
   }
 }
 
 object golBaniada {
   method _precio() = golosinaBase._precio() + 2
   method _sabor() = golosinaBase._sabor()
-  method _peso() = golosinaBase._peso() + 4
+  method peso() = golosinaBase._peso() + banioChocolate
+  var property golosinaBase = null 
+  
   method _gluten() = golosinaBase._gluten() 
-  var property golosinaBase = null
   var property banioChocolate = 4
 
-  method golosinaBase(golosina){
+  method golosinaBase(golosina,pesoInicial){
+    if (pesoInicial != null) {
+            chocolatin.peso(pesoInicial) 
+    }
     golosinaBase = golosina
+    return golosinaBase
   }
 
   method recibeMordisco(){
     golosinaBase.recibeMordisco()
-    if (banioChocolate == 4){
-      self._peso() - 2 
-      banioChocolate = 2
-    } else if (banioChocolate == 2){
-        self._peso() - 2 
-        banioChocolate = 0
+    if (banioChocolate > 0 ){
+      banioChocolate -= 2
     }
   }
 }
 
 object tuti{
-  var property _precio = 0 
-  var property _gluten = null
   var property _sabor = naranja
   var property _peso = 5
+  var property _gluten = null
 
-  method precio() {
-    if (_gluten == 1){
-        _precio = 7
-    }else if (_gluten == 0){
-        _precio = 10
+  method _precio() {
+    if (_gluten){
+        return 7
+    }else{
+        return 10
     }
   }
-  method gluten(valor){
-    _gluten = valor 
-    }
 
   method recibeMordisco() {
     _sabor = _sabor.siguiente() 
@@ -136,6 +133,9 @@ object frutilla {
 object mariano {
   var property golosina = []
   var property precioCuidado = [] 
+  var property conjuntoSabores = #{}
+  var property sumaPeso = 0
+  var property golosinasDeseadas = [caramelo,"mentita",alfajor,"oreo"]
   method comprar(unaGolosina){
     golosina.add(unaGolosina) 
   }
@@ -147,12 +147,29 @@ object mariano {
   method probar() {
     golosina.forEach({golosina => golosina.recibeMordisco()})
   }
-
   method sinTACC() {
-    golosina.any({golosina => golosina._gluten()})    
+    return golosina.any({golosina => golosina._gluten()})    
   }
   method preciosCuidados(){
-    golosina.all({golosina => golosina._precio() <= 10})
-    return precioCuidado.add(golosina)
+    golosina.map({golosina => precioCuidado.add(golosina._precio() <= 10)})
+    return precioCuidado
   } 
+  method golosinaDeSabor(unSabor) {
+    golosina.all({golosina => golosina._sabor() == unSabor})
+    return golosina.first()
+  }
+  method golosinasDeSabor(unSabor) {
+    golosina.all({golosina => golosina._sabor() == unSabor})
+  return golosina
+  }
+  method sabores(){
+    golosina.map({golosina => conjuntoSabores.add(golosina._sabor())})
+    return conjuntoSabores
+  }
+  method golosinaMasCara() = golosina.max({golosina => golosina._precio()})
+  method pesoGolosinas() = golosina.sum({golosina => golosina._peso()})
+
+  method golosinasFaltantes(gDeseadas) =  golosinasDeseadas.filter({ golosina => !golosina.contains(golosina)})
+
+
 }
